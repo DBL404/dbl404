@@ -1,1 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Галерея</title>
+<style>
+  :root { --bd:#e3e3e3; --accent:#2b6cb0; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    max-width: 980px; margin: 0 auto; padding: 1.5rem 1rem 4rem;
+    color: #1a1a1a; line-height: 1.45;
+  }
+  h1 { font-size: 1.6rem; margin: 0 0 1.2rem; }
+  details {
+    border: 1px solid var(--bd); border-radius: 10px;
+    margin: 10px 0; background: #fff;
+    transition: box-shadow .2s;
+  }
+  details[open] { box-shadow: 0 2px 10px rgba(0,0,0,.05); }
+  summary {
+    cursor: pointer; padding: 14px 16px; font-weight: 600;
+    font-size: 1.05rem; list-style: none; user-select: none;
+    display: flex; align-items: center; gap: 10px;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::before {
+    content: "▸"; color: var(--accent); font-size: 1.1rem;
+    transition: transform .2s; display: inline-block;
+  }
+  details[open] summary::before { transform: rotate(90deg); }
+  summary .count { color: #888; font-weight: 400; font-size: .9rem; margin-left: auto; }
+  .gallery {
+    display: grid; gap: 10px; padding: 4px 16px 16px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+  .gallery img {
+    width: 100%; height: 180px; object-fit: cover;
+    border-radius: 8px; display: block; cursor: zoom-in;
+    background: #f3f3f3;
+  }
+  /* Лайтбокс */
+  #lb {
+    position: fixed; inset: 0; background: rgba(0,0,0,.9);
+    display: none; align-items: center; justify-content: center;
+    z-index: 100; padding: 20px; cursor: zoom-out;
+  }
+  #lb.on { display: flex; }
+  #lb img { max-width: 100%; max-height: 100%; border-radius: 6px; }
+  footer { margin-top: 3rem; color: #888; font-size: .85rem; text-align: center; }
+</style>
+</head>
+<body>
 
+<h1>Галерея</h1>
+<div id="app"></div>
+<footer>Обновлено автоматически из массива BLOCKS</footer>
+
+<div id="lb"><img alt=""></div>
+
+<script>
+/* ============================================================
+   ЗДЕСЬ ВСЁ РЕДАКТИРУЕТСЯ.
+   Блок = { title: "Название", images: ["файл1.jpg", "файл2.jpg"] }
+   Картинки лежат в той же папке, что и index.html.
+   ============================================================ */
+const BLOCKS = [
+  {
+    title: "Природа",
+    images: ["1.jpg", "2.jpg", "3.jpg"]
+  },
+  {
+    title: "Город",
+    images: ["4.jpg", "5.jpg"]
+  },
+  {
+    title: "Разное",
+    images: []   // пустой блок — просто покажет «нет изображений»
+  }
+];
+/* ============================================================ */
+
+const app = document.getElementById("app");
+const lb  = document.getElementById("lb");
+const lbI = lb.querySelector("img");
+
+BLOCKS.forEach(b => {
+  const d = document.createElement("details");
+  const s = document.createElement("summary");
+  s.innerHTML = `<span>${b.title}</span><span class="count">${b.images.length}</span>`;
+  d.appendChild(s);
+
+  const g = document.createElement("div");
+  g.className = "gallery";
+
+  if (b.images.length === 0) {
+    const p = document.createElement("div");
+    p.style.cssText = "padding:0 16px 16px;color:#999;";
+    p.textContent = "Нет изображений";
+    d.appendChild(p);
+  } else {
+    b.images.forEach(src => {
+      const img = document.createElement("img");
+      img.src = src; img.alt = ""; img.loading = "lazy";
+      img.onerror = () => { img.style.opacity = ".3"; img.title = "Не найдено: " + src; };
+      img.onclick = () => { lbI.src = src; lb.classList.add("on"); };
+      g.appendChild(img);
+    });
+    d.appendChild(g);
+  }
+  app.appendChild(d);
+});
+
+lb.onclick = () => lb.classList.remove("on");
+document.addEventListener("keydown", e => { if (e.key === "Escape") lb.classList.remove("on"); });
+</script>
+</body>
+</html>
