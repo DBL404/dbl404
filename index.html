@@ -3,117 +3,436 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Галерея</title>
+<title>Варианты офисов</title>
 <style>
-  :root { --bd:#e3e3e3; --accent:#2b6cb0; }
+  :root { --bd:#e3e3e3; --accent:#2b6cb0; --bg:#fafafa; }
   * { box-sizing: border-box; }
   body {
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     max-width: 980px; margin: 0 auto; padding: 1.5rem 1rem 4rem;
-    color: #1a1a1a; line-height: 1.45;
+    color: #1a1a1a; line-height: 1.55; background: var(--bg);
   }
-  h1 { font-size: 1.6rem; margin: 0 0 1.2rem; }
+  h1 { font-size: 1.7rem; margin: 0 0 1.5rem; }
+  h2 { font-size: 1.15rem; margin: 1.6rem 0 .6rem; }
+  h3 { font-size: 1.02rem; margin: 1.2rem 0 .4rem; color:#333; }
+  p { margin: .5rem 0; }
+  ul { margin: .4rem 0 .8rem; padding-left: 1.4rem; }
+  li { margin: 2px 0; }
+  a { color: var(--accent); }
+
+  /* Аккордеон */
   details {
     border: 1px solid var(--bd); border-radius: 10px;
-    margin: 10px 0; background: #fff;
-    transition: box-shadow .2s;
+    margin: 10px 0; background: #fff; overflow: hidden;
   }
   details[open] { box-shadow: 0 2px 10px rgba(0,0,0,.05); }
-  summary {
+  details > summary {
     cursor: pointer; padding: 14px 16px; font-weight: 600;
-    font-size: 1.05rem; list-style: none; user-select: none;
+    font-size: 1.08rem; list-style: none; user-select: none;
     display: flex; align-items: center; gap: 10px;
+    background: #fff;
   }
-  summary::-webkit-details-marker { display: none; }
-  summary::before {
+  details > summary::-webkit-details-marker { display: none; }
+  details > summary::before {
     content: "▸"; color: var(--accent); font-size: 1.1rem;
     transition: transform .2s; display: inline-block;
   }
-  details[open] summary::before { transform: rotate(90deg); }
-  summary .count { color: #888; font-weight: 400; font-size: .9rem; margin-left: auto; }
-  .gallery {
-    display: grid; gap: 10px; padding: 4px 16px 16px;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  details[open] > summary::before { transform: rotate(90deg); }
+  details[open] > summary { border-bottom: 1px solid var(--bd); }
+  .inner { padding: 12px 20px 20px; }
+
+  /* Вложенный аккордеон — чуть компактнее */
+  details details { margin: 8px 0; background: #fcfcfc; }
+  details details > summary { font-size: 1rem; padding: 10px 14px; font-weight: 500; }
+
+  /* Картинки */
+  .imgwrap { margin: 10px 0; }
+  .imgwrap img {
+    max-width: 100%; height: auto; border-radius: 8px;
+    display: block; cursor: zoom-in; background: #f3f3f3;
   }
-  .gallery img {
-    width: 100%; height: 180px; object-fit: cover;
-    border-radius: 8px; display: block; cursor: zoom-in;
-    background: #f3f3f3;
-  }
+  .imgwrap .cap { font-size: .85rem; color: #888; margin-top: 4px; }
+
+  /* Таблицы */
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: .95rem; }
+  th, td { border: 1px solid var(--bd); padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: #f0f4f8; font-weight: 600; }
+  .swot th.s { background: #d9ead3; }
+  .swot th.w { background: #fce5cd; }
+  .swot th.o { background: #cfe2f3; }
+  .swot th.r { background: #f4cccc; }
+
   /* Лайтбокс */
   #lb {
-    position: fixed; inset: 0; background: rgba(0,0,0,.9);
+    position: fixed; inset: 0; background: rgba(0,0,0,.92);
     display: none; align-items: center; justify-content: center;
     z-index: 100; padding: 20px; cursor: zoom-out;
   }
   #lb.on { display: flex; }
   #lb img { max-width: 100%; max-height: 100%; border-radius: 6px; }
-  footer { margin-top: 3rem; color: #888; font-size: .85rem; text-align: center; }
+
+  .toolbar { margin-bottom: 1rem; display:flex; gap:8px; flex-wrap:wrap; }
+  .toolbar button {
+    padding: 6px 12px; border:1px solid var(--bd); background:#fff;
+    border-radius:6px; cursor:pointer; font-size:.9rem;
+  }
+  .toolbar button:hover { background:#f7f7f7; }
 </style>
 </head>
 <body>
 
-<h1>Галерея</h1>
-<div id="app"></div>
-<footer>Обновлено автоматически из массива BLOCKS</footer>
+<h1>Варианты офисов</h1>
 
+<div class="toolbar">
+  <button onclick="toggleAll(true)">Развернуть все</button>
+  <button onclick="toggleAll(false)">Свернуть все</button>
+</div>
+
+<!-- ===================================================================
+     РАЗДЕЛ 1. ТРЕБОВАНИЯ И ИД
+     Чтобы отредактировать текст — правьте прямо внутри <div class="inner">.
+     Чтобы добавить пункт — скопируйте <li>...</li>.
+     =================================================================== -->
+<details open>
+  <summary>1. Требования и ИД</summary>
+  <div class="inner">
+
+    <h3>1.1 Локация</h3>
+    <p>Офис классов А или В в пешей доступности (не более 10 мин) от метро в районе
+    основных офисных площадей СТЦ (Лесная, Мужества). С хорошей транспортной
+    доступностью, наличием выделенных и свободных парковочных мест
+    (не менее 1 м-м на 5 сотрудников).</p>
+    <p>Альтернативно, в порядке убывания приоритета:</p>
+    <ul>
+      <li>1 — Лесная, пл. Мужества, Академическая</li>
+      <li>2 — пл. Ленина, Чёрная речка</li>
+      <li>3 — юг синей ветки от Московских ворот и ниже</li>
+    </ul>
+
+    <h3>1.2 Расширение</h3>
+    <p>Должен быть потенциал расширения за счёт наличия дополнительных площадей в БЦ.</p>
+
+    <h3>1.3 Расчёт площади помещений</h3>
+    <table>
+      <thead>
+        <tr><th>Назначение</th><th>Единиц</th><th>м² на 1 ед.</th><th>Общая пл., м²</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Численность</td><td>35–60</td><td>8</td><td>260–480</td></tr>
+        <tr><td>Переговорка</td><td>2</td><td>10</td><td>20</td></tr>
+        <tr><td>Подсобка + серверная</td><td>2</td><td>15</td><td>30</td></tr>
+        <tr><td>Помещение для принтеров</td><td>1</td><td>20</td><td>20</td></tr>
+        <tr><td>Техника и общие зоны</td><td>10</td><td>3</td><td>30</td></tr>
+        <tr><th colspan="3">ИТОГО</th><th>360–580</th></tr>
+      </tbody>
+    </table>
+
+    <h3>1.4 Инфраструктура</h3>
+    <ul>
+      <li>До метро — 10 мин</li>
+      <li>До сетевых продуктовых — 7 мин</li>
+      <li>До кафе / столовых — 5 мин</li>
+      <li>До ТРК (не обязательно) — 10–15 мин</li>
+    </ul>
+
+    <h3>1.5 Парковка</h3>
+    <p>Выделенных мест 10–30. Наличие бесплатной общественной или гостевой парковки.</p>
+
+    <h3>1.6 Обязательно наличие</h3>
+    <ul>
+      <li>Охрана и пропускной режим</li>
+      <li>СКУД</li>
+      <li>Круглосуточный доступ</li>
+      <li>Система кондиционирования и вентиляции</li>
+      <li>Грузовой лифт (если выше 2-го этажа)</li>
+      <li>Возможность организации VPN-туннелей к основным сетевым ресурсам</li>
+      <li>Помещение для еды или точки общепита в здании или непосредственно рядом</li>
+      <li>Возможность работы с оборудованием (тесты каналов, плат, антенн)</li>
+      <li>Возможность выделения места под серверное оборудование</li>
+      <li>Возможность выделения места под шумное оборудование (стенды, 3D-принтеры и т. п.)</li>
+    </ul>
+
+    <h3>1.7 Желательно</h3>
+    <ul>
+      <li>Возможность размещения мест для сборки / пайки / ремонта</li>
+      <li>ОСНО (для учёта НДС)</li>
+      <li>Доступ к крыше и возможность временной установки антенн для испытаний радиоканалов</li>
+    </ul>
+
+  </div>
+</details>
+
+<!-- ===================================================================
+     РАЗДЕЛ 2. ТРК К39
+     =================================================================== -->
+<details>
+  <summary>2. ТРК К39 — ул. Кантемировская, д. 39 — «В−»</summary>
+  <div class="inner">
+
+    <p>275+55 или 700 м², 4 или 2 эт. БЦ класса В−, в 100 м от БЦ К37.
+    8 мин от м. Лесная. Доступно 2 помещения на 4-м этаже (275+50 м²),
+    а также выделенный блок 700 м² на 2-м этаже.</p>
+
+    <p><b>4-й этаж.</b> Общий коридор с другими арендаторами, 2 общих санблока на этаж,
+    1 мокрая точка. Стены — гипрок / покраска, пол — ламинат под перестил,
+    потолок подвесной, освещение встроенное. Без мебели. Требуется чистка,
+    косметический ремонт, перепланировка. На этаже ещё несколько (&gt;20) арендаторов,
+    центральный коридор общий, 2 лифта (1 грузовой). Кондиционирование и вентиляция —
+    сплит в нескольких кабинетах. Доступ круглосуточный.</p>
+
+    <p><b>2-й этаж.</b> Выделенный блок с отдельным выходом на общую лестницу,
+    грузовым лифтом, грузовым подъёмником. Часть блока отделана под офис,
+    часть — пром. помещение. Требуется перепланировка и ремонт. Собственник готов
+    делать с нашими материалами.</p>
+
+    <p>Парковка общественная на улице, возможен выкуп мест. Возможно расширение площадей.</p>
+
+    <h3>Финансы</h3>
+    <p>1500 ₽/м². Договор на год (1 мес. депозит + 1 мес. штраф при досрочке).
+    Клининг возможен от БЦ, коммуналка, эл-во по отдельным счётчикам, НДС,
+    интернет по отдельному договору. Арендные каникулы до 2 мес.
+    Парковка — 1,5–3 тыс. ₽/мес. за м-м. А/д готов сделать ремонт сам с нашими
+    материалами. Возможны другие компромиссные варианты по подготовке помещений.</p>
+
+    <h3>Резюме</h3>
+    <p>Вариант с отличным расположением и инфраструктурой, но плохим ремонтом
+    и посредственной входной зоной по средней+ цене. Для заезда требуется ремонт.</p>
+
+    <!-- 2.1 -->
+    <details>
+      <summary>2.1 Локация и план</summary>
+      <div class="inner">
+        <div class="imgwrap">
+          <img src="img/k39-map.jpg" alt="Карта К39">
+          <div class="cap">Расположение БЦ</div>
+        </div>
+      </div>
+    </details>
+
+    <!-- 2.2 -->
+    <details>
+      <summary>2.2 Помещение 275 + 55 м², 4 эт</summary>
+      <div class="inner">
+        <p>Распланировано на комнаты, посередине общий коридор.</p>
+
+        <div class="imgwrap">
+          <img src="img/k39-plan-4.jpg" alt="План 4 этажа 275+55">
+          <div class="cap">План помещений на 4 этаже</div>
+        </div>
+
+        <div class="imgwrap">
+          <img src="img/k39-photo-4.jpg" alt="Фото 275+55">
+          <div class="cap">Фото</div>
+        </div>
+
+        <div class="imgwrap">
+          <img src="img/k39-plan-alt.jpg" alt="План 4 этажа (вариант)">
+          <div class="cap">План (дополнительный ракурс)</div>
+        </div>
+      </div>
+    </details>
+
+    <!-- 2.3 -->
+    <details>
+      <summary>2.3 Помещение 700 м², 2 эт</summary>
+      <div class="inner">
+        <div class="imgwrap">
+          <img src="img/k39-plan-2.jpg" alt="План 700 м², 2 этаж">
+          <div class="cap">План помещений на 2 этаже</div>
+        </div>
+
+        <div class="imgwrap">
+          <img src="img/k39-photo-2.jpg" alt="Фото 700 м²">
+          <div class="cap">Фото</div>
+        </div>
+      </div>
+    </details>
+
+    <!-- 2.4 СВОТ -->
+    <details>
+      <summary>2.4 СВОТ</summary>
+      <div class="inner">
+        <table class="swot">
+          <tr>
+            <th class="s" style="width:50%">Сильные</th>
+            <th class="w" style="width:50%">Слабые</th>
+          </tr>
+          <tr>
+            <td>
+              <ul>
+                <li>Расположение и доступность</li>
+                <li>Хорошая цена для локации</li>
+                <li>Подходящие по размеру площади</li>
+                <li>Готовность А/д выполнить ремонт и перепланировку, арендные каникулы</li>
+                <li>Выделенный блок</li>
+                <li>Круглосуточный доступ</li>
+                <li>Инфраструктура, наличие свободной и платной парковки</li>
+                <li>Грузовой лифт, подъёмник</li>
+              </ul>
+            </td>
+            <td>
+              <ul>
+                <li>Необходим ремонт от косметического до основательного</li>
+                <li>Нет мебели</li>
+                <li>Нужна установка СКУД</li>
+                <li>Непрезентабельная входная группа</li>
+                <li>Узкая лестница</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <th class="o">Возможности</th>
+            <th class="r">Риски</th>
+          </tr>
+          <tr>
+            <td>
+              <ul>
+                <li>Возможность аренды доп. площадей при освобождении (общая &gt;20 000 м²)</li>
+                <li>Заинтересованность собственника в расширении наших площадей</li>
+                <li>Тест каналов связи между офисами</li>
+              </ul>
+            </td>
+            <td>
+              <ul>
+                <li>Индексация цены</li>
+                <li>Крупные вложения для приведения в порядок</li>
+                <li>Длительные сроки заселения при нарушении графика ремонта</li>
+              </ul>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </details>
+
+  </div>
+</details>
+
+<!-- ===================================================================
+     РАЗДЕЛ 3. БЦ BIKELAND
+     =================================================================== -->
+<details>
+  <summary>3. БЦ Bikeland — Кушелевская дор., 12 — «В»</summary>
+  <div class="inner">
+
+    <p>1400 ₽/м², 350–330 м². Половина крыла 3-го этажа БЦ класса В,
+    посередине между «стекляшкой» и К37. Доступно несколько кабинетов в 1-м секторе
+    с выделенным входом и санузлом. Кабинетная планировка, неплохой ремонт.
+    Закрытый двор и парковка. Готовы оставить часть мебели. Возможности
+    перепланировки не просматриваются, широкие лестничные пролёты.
+    2,2 км до Лесной и пл. Мужества.</p>
+
+    <h3>Финансы</h3>
+    <p>1400 ₽/м². Обслуживание отдельно, эл-во по счётчику, коммуналка отдельно.</p>
+
+    <h3>Техника</h3>
+    <p>Лифт отсутствует. 3 выделенных санузла (кабинка с унитазом) без разделения
+    на м/ж. Парковка 5 тыс. ₽/мес./место, до 40 мест, общественная отсутствует.</p>
+
+    <h3>Резюме</h3>
+    <p>Вариант с неплохим ремонтом и расположением. Не очень функциональные
+    кабинеты ввиду малого размера. Плохо подходит для пеших, ограничен по парковкам.</p>
+
+    <details>
+      <summary>3.1 Локация и план</summary>
+      <div class="inner">
+        <div class="imgwrap">
+          <img src="img/bikeland-map.jpg" alt="Карта Bikeland">
+          <div class="cap">Расположение БЦ</div>
+        </div>
+
+        <div class="imgwrap">
+          <img src="img/bikeland-plan.jpg" alt="План Bikeland">
+          <div class="cap">План 3-го этажа</div>
+        </div>
+
+        <div class="imgwrap">
+          <img src="img/bikeland-photo.jpg" alt="Фото Bikeland">
+          <div class="cap">Фасад</div>
+        </div>
+
+        <div class="imgwrap">
+          <img src="img/bikeland-interior.jpg" alt="Интерьеры Bikeland">
+          <div class="cap">Интерьеры</div>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary>3.2 СВОТ</summary>
+      <div class="inner">
+        <table class="swot">
+          <tr>
+            <th class="s" style="width:50%">Сильные</th>
+            <th class="w" style="width:50%">Слабые</th>
+          </tr>
+          <tr>
+            <td>
+              <ul>
+                <li>Готово к заселению, неплохой ремонт</li>
+                <li>Выделенная группа помещений с отдельным входом</li>
+                <li>Мало других арендаторов</li>
+                <li>Гибкий собственник</li>
+              </ul>
+            </td>
+            <td>
+              <ul>
+                <li>Не очень удобная нарезка на маленькие кабинеты</li>
+                <li>Далеко (&gt;20 мин) до любого метро</li>
+                <li>Отсутствует лифт</li>
+                <li>Отсутствует б/п парковка, дорогие парк-места</li>
+                <li>Подъезд только с 1 стороны</li>
+                <li>Узкие коридоры, м. б. сложно с проносом оборудования</li>
+                <li>Нет своих точек питания. Нет душа, возможности расширения с/у</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <th class="o">Возможности</th>
+            <th class="r">Риски</th>
+          </tr>
+          <tr>
+            <td>
+              <ul>
+                <li>Потенциально могут быть добавлены другие площади 3-го этажа вплоть до 500 м²</li>
+                <li>Тестирование каналов за счёт прямой видимости «стекляшки»</li>
+              </ul>
+            </td>
+            <td>
+              <ul>
+                <li>Кабинетная планировка не позволит тестировать габаритное оборудование</li>
+                <li>Площадей хватает впритык</li>
+              </ul>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </details>
+
+  </div>
+</details>
+
+<!-- Лайтбокс -->
 <div id="lb"><img alt=""></div>
 
 <script>
-/* ============================================================
-   ЗДЕСЬ ВСЁ РЕДАКТИРУЕТСЯ.
-   Блок = { title: "Название", images: ["файл1.jpg", "файл2.jpg"] }
-   Картинки лежат в той же папке, что и index.html.
-   ============================================================ */
-const BLOCKS = [
-  {
-    title: "Природа",
-    images: ["1.jpg", "2.jpg", "3.jpg"]
-  },
-  {
-    title: "Город",
-    images: ["4.jpg", "5.jpg"]
-  },
-  {
-    title: "Разное",
-    images: []   // пустой блок — просто покажет «нет изображений»
-  }
-];
-/* ============================================================ */
-
-const app = document.getElementById("app");
 const lb  = document.getElementById("lb");
 const lbI = lb.querySelector("img");
 
-BLOCKS.forEach(b => {
-  const d = document.createElement("details");
-  const s = document.createElement("summary");
-  s.innerHTML = `<span>${b.title}</span><span class="count">${b.images.length}</span>`;
-  d.appendChild(s);
-
-  const g = document.createElement("div");
-  g.className = "gallery";
-
-  if (b.images.length === 0) {
-    const p = document.createElement("div");
-    p.style.cssText = "padding:0 16px 16px;color:#999;";
-    p.textContent = "Нет изображений";
-    d.appendChild(p);
-  } else {
-    b.images.forEach(src => {
-      const img = document.createElement("img");
-      img.src = src; img.alt = ""; img.loading = "lazy";
-      img.onerror = () => { img.style.opacity = ".3"; img.title = "Не найдено: " + src; };
-      img.onclick = () => { lbI.src = src; lb.classList.add("on"); };
-      g.appendChild(img);
-    });
-    d.appendChild(g);
-  }
-  app.appendChild(d);
+document.querySelectorAll(".imgwrap img").forEach(img => {
+  img.loading = "lazy";
+  img.onerror = () => {
+    img.style.opacity = ".35";
+    img.alt = "Не найдено: " + img.getAttribute("src");
+  };
+  img.onclick = () => { lbI.src = img.src; lb.classList.add("on"); };
 });
 
 lb.onclick = () => lb.classList.remove("on");
 document.addEventListener("keydown", e => { if (e.key === "Escape") lb.classList.remove("on"); });
+
+function toggleAll(open) {
+  document.querySelectorAll("details").forEach(d => d.open = open);
+}
 </script>
 </body>
 </html>
